@@ -1,0 +1,18 @@
+[
+    {
+        "dev": {
+            "admin": {
+                "user": {
+                    "ssm": {
+                        "method": "post",
+                        "apiPath": "/dev/admin/user/ssm"
+                    },
+                    "info": {
+                        "method": "get",
+                        "apiPath": "/dev/admin/user/info"
+                    }
+                }
+            }
+        }
+    }
+]
