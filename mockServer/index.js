@@ -3,6 +3,7 @@ const Koa = require('koa');
 const Router = require('koa-router');
 const glob = require('glob');
 const logger = require('koa-logger');
+const cors = require('koa2-cors');
 const { resolve } = require('path');
 const app = new Koa();
 const router = new Router({ prefix: '/api' });
@@ -10,9 +11,10 @@ const router = new Router({ prefix: '/api' });
 const routerMap = [];
 // 打印每个请求和响应的数据
 app.use(logger());
+// 设置跨域
+app.use(cors());
 // 遍历api下的所有的文件夹以及文件夹下的.json并将匹配到的路径保存成一个数组
 const apiUrlArr = glob.sync(resolve('./api', '**/*.json'));
-
 // 格式化打印路由方法
 function formattingMap(apiPath, target = {}) {
 	let currPath = apiPath.charAt(0) == '/' ? apiPath.slice(1).split('/') : apiPath.split('/');
@@ -58,7 +60,7 @@ if (apiUrlArr.length != 0) {
 		let apiJsonPath = item && item.split('/api')[1];
 		// 根据后缀名设置请求的方式
 		let method =
-			apiJsonPath.endsWith('.get.json') && apiJsonPath.endsWith('.json')
+			apiJsonPath.endsWith('.get.json')
 				? 'GET'
 				: apiJsonPath.endsWith('.post.json')
 				? 'POST'
@@ -68,7 +70,8 @@ if (apiUrlArr.length != 0) {
 				? 'PUT'
 				: apiJsonPath.endsWith('.delete.json')
 				? 'DEL'
-				: 'ALL';
+				: apiJsonPath.endsWith('.json')
+				? 'GET':'ALL';
 		// 路由路径
 		let apiPath = apiJsonPath.replace('.get.json', '').replace('.post.json', '').replace('.put.json', '').replace('.delete.json', '');
 		router[method.toLowerCase()](apiPath, (ctx, next) => {
@@ -83,7 +86,6 @@ if (apiUrlArr.length != 0) {
 				ctx.throw('服务器错误', 500);
 			}
 		});
-
 		// 记录路由
 		let mapTarget = {
 			method: method.toLowerCase(),
@@ -101,9 +103,9 @@ if (apiUrlArr.length != 0) {
 	}
 	// 写入文件
 	let routerAddressUrl = './routerMap.json';
-	fs.writeFile(routerAddressUrl, JSON.stringify(routerMap, null, 4), (err) => {
+	fs.writeFile(routerAddressUrl, JSON.stringify(routerMap, null, 2), (err) => {
 		if (!err) {
-			console.log('路由地图生成成功！请在根目录 \x1b[36m%s\x1b[0m ', routerAddressUrl, '查看所有的匹配路径');
+			console.log('API已更新！请在根目录 \x1b[36m%s\x1b[0m ', routerAddressUrl, '查看所有的匹配路径');
 		}
 	});
 	app.use(router.routes()).use(router.allowedMethods());

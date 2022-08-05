@@ -1,18 +1,36 @@
 [
-    {
-        "dev": {
-            "admin": {
-                "user": {
-                    "ssm": {
-                        "method": "post",
-                        "apiPath": "/dev/admin/user/ssm"
-                    },
-                    "info": {
-                        "method": "get",
-                        "apiPath": "/dev/admin/user/info"
-                    }
-                }
-            }
+  {
+    "dev": {
+      "admin": {
+        "user": {
+          "ssm": {
+            "method": "post",
+            "apiPath": "/dev/admin/user/ssm"
+          },
+          "info": {
+            "method": "get",
+            "apiPath": "/dev/admin/user/info"
+          }
         }
+      }
+    },
+    "articles": {
+      "1234.json": {
+        "method": "get",
+        "apiPath": "/articles/1234.json"
+      },
+      "3445.json": {
+        "method": "get",
+        "apiPath": "/articles/3445.json"
+      },
+      "product.json": {
+        "method": "get",
+        "apiPath": "/articles/product.json"
+      },
+      "user.json": {
+        "method": "get",
+        "apiPath": "/articles/user.json"
+      }
     }
+  }
 ]
